@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /data_siswa/{id} {
+      allow read, write: if true;
+    }
+    match /mapel/{id} {
+      allow read, write: if true;
+    }
+    match /jadwal/{id} {
+      allow read, write: if true;
+    }
+    match /log_absensi/{id} {
+      allow read, write: if true;
+    }
+    match /data_nilai/{id} {
+      allow read, write: if true;
+    }
+    match /jurnal_agenda/{id} {
+      allow read, write: if true;
+    }
+    match /bimbingan_wali/{id} {
+      allow read, write: if true;
+    }
+    match /siswa_bimbingan/{id} {
+      allow read, write: if true;
+    }
+    match /jadwal_pengingat/{id} {
+      allow read, write: if true;
+    }
+    match /kalender_pendidikan/{id} {
+      allow read, write: if true;
+    }
+    match /pengaturan/{id} {
+      allow read, write: if true;
+    }
+    match /users/{id} {
+      allow read, write: if true;
+    }
+    match /test/{id} {
+      allow read, write: if true;
+    }
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
