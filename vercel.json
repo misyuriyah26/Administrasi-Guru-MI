@@ -3,11 +3,7 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://ais-dev-tz7h75ytflblzbpkarikdx-244981330356.asia-southeast1.run.app/api/$1"
-    },
-    {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ],
@@ -34,7 +30,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://administrasi-guru-mi.vercel.app"
+          "value": "*"
         },
         {
           "key": "Access-Control-Allow-Methods",
