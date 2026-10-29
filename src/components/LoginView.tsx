@@ -94,11 +94,17 @@ export const LoginView: React.FC<LoginViewProps> = ({
     }
   };
 
+  const [copiedText, setCopiedText] = useState<string | null>(null);
+
+  const handleCopyText = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedText(text);
+    setTimeout(() => setCopiedText(null), 2500);
+  };
+
   const handleCopyCurrentDomain = () => {
-    const host = typeof window !== "undefined" ? window.location.hostname : "";
-    navigator.clipboard.writeText(host);
-    setCopiedDomain(true);
-    setTimeout(() => setCopiedDomain(false), 2500);
+    const host = typeof window !== "undefined" ? window.location.hostname : "administrasi-guru-mi.vercel.app";
+    handleCopyText(host);
   };
 
   // Handle NIP / Credentials Login
@@ -427,23 +433,44 @@ export const LoginView: React.FC<LoginViewProps> = ({
                         </button>
                       </div>
 
-                      <div className="pt-2 border-t border-amber-800/40 text-[10px] text-slate-400 space-y-1">
+                      <div className="pt-2 border-t border-amber-800/40 text-[10px] text-slate-400 space-y-2">
                         <div className="flex items-center justify-between">
-                          <span>Domain saat ini:</span>
+                          <span className="font-bold text-amber-300">Domain Vercel:</span>
+                          <button
+                            type="button"
+                            onClick={() => handleCopyText("administrasi-guru-mi.vercel.app")}
+                            className="text-amber-400 font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                          >
+                            {copiedText === "administrasi-guru-mi.vercel.app" ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                            <span>{copiedText === "administrasi-guru-mi.vercel.app" ? "Tersalin!" : "Salin Vercel Domain"}</span>
+                          </button>
+                        </div>
+                        <code className="block bg-slate-950 p-1.5 rounded text-[10px] text-amber-200 truncate font-mono select-all">
+                          administrasi-guru-mi.vercel.app
+                        </code>
+
+                        <div className="flex items-center justify-between pt-1">
+                          <span>Domain saat ini ({typeof window !== "undefined" ? window.location.hostname : "preview"}):</span>
                           <button
                             type="button"
                             onClick={handleCopyCurrentDomain}
-                            className="text-amber-400 font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                            className="text-slate-400 font-bold hover:underline flex items-center gap-1 cursor-pointer"
                           >
-                            {copiedDomain ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                            <span>{copiedDomain ? "Tersalin!" : "Salin Domain"}</span>
+                            {copiedText === (typeof window !== "undefined" ? window.location.hostname : "") ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                            <span>Salin</span>
                           </button>
                         </div>
-                        <code className="block bg-slate-950 p-1.5 rounded text-[10px] text-amber-200/90 truncate font-mono">
-                          {typeof window !== "undefined" ? window.location.hostname : "localhost"}
-                        </code>
-                        <p className="text-[10px] text-slate-400 italic">
-                          Untuk otorisasi permanen: Tambahkan domain di Firebase Console &gt; Authentication &gt; Settings &gt; Authorized domains.
+
+                        <p className="text-[10px] text-slate-400 leading-relaxed">
+                          Tambahkan <code>administrasi-guru-mi.vercel.app</code> di{" "}
+                          <a
+                            href="https://console.firebase.google.com/project/civic-experience-hwjrd/authentication/settings"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-amber-400 underline font-bold inline-flex items-center gap-0.5"
+                          >
+                            Firebase Console &gt; Authorized domains <ExternalLink className="w-2.5 h-2.5" />
+                          </a>
                         </p>
                       </div>
                     </div>

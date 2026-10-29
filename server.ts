@@ -10,6 +10,39 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
+  // CORS Configuration: Allow administrasi-guru-mi.vercel.app and preview domains
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    const allowedOrigins = [
+      "https://administrasi-guru-mi.vercel.app",
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "https://ais-dev-tz7h75ytflblzbpkarikdx-244981330356.asia-southeast1.run.app",
+      "https://ais-pre-tz7h75ytflblzbpkarikdx-244981330356.asia-southeast1.run.app"
+    ];
+
+    if (
+      origin &&
+      (allowedOrigins.includes(origin) ||
+        origin.endsWith(".vercel.app") ||
+        origin.endsWith(".run.app"))
+    ) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+    } else if (!origin) {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+    }
+
+    if (req.method === "OPTIONS") {
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+      return res.sendStatus(204);
+    }
+    next();
+  });
+
   app.use(express.json({ limit: "10mb" }));
 
   // Initialize Gemini AI Client lazily or safely

@@ -25,7 +25,8 @@ import {
   Check,
   Terminal,
   Cpu,
-  HelpCircle
+  HelpCircle,
+  Globe
 } from "lucide-react";
 import { Pengaturan } from "../types";
 import { savePengaturan } from "../lib/firebase";
@@ -107,6 +108,13 @@ export const PengaturanView: React.FC<PengaturanViewProps> = ({ config, onNaviga
     navigator.clipboard.writeText('GEMINI_API_KEY="AIzaSy..."');
     setCopiedEnv(true);
     setTimeout(() => setCopiedEnv(false), 2500);
+  };
+
+  const [copiedVercelDomain, setCopiedVercelDomain] = useState(false);
+  const handleCopyVercelDomain = () => {
+    navigator.clipboard.writeText("administrasi-guru-mi.vercel.app");
+    setCopiedVercelDomain(true);
+    setTimeout(() => setCopiedVercelDomain(false), 2500);
   };
 
   // File Input References
@@ -474,6 +482,74 @@ export const PengaturanView: React.FC<PengaturanViewProps> = ({ config, onNaviga
               )}
             </div>
           )}
+        </div>
+
+        {/* SECTION: DOMAIN RESMI VERCEL & OTORISASI FIREBASE */}
+        <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white rounded-3xl p-5 sm:p-6 border border-slate-700 shadow-sm space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-700/80 pb-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-11 h-11 rounded-2xl bg-black/40 border border-slate-600 flex items-center justify-center text-white shrink-0">
+                <Globe className="w-6 h-6 text-emerald-400" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="font-extrabold text-base text-white">
+                    Domain Hosting Resmi Vercel & Firebase
+                  </h3>
+                  <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    administrasi-guru-mi.vercel.app
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Konfigurasi domain untuk akses penuh, CORS API, dan otorisasi login Google Firebase di Vercel.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleCopyVercelDomain}
+                className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+              >
+                {copiedVercelDomain ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedVercelDomain ? "Tersalin!" : "Salin Domain Vercel"}</span>
+              </button>
+              <a
+                href="https://console.firebase.google.com/project/civic-experience-hwjrd/authentication/settings"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-bold rounded-xl text-xs flex items-center gap-1.5 border border-slate-700 transition-all cursor-pointer"
+              >
+                <span>Buka Firebase Console</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+            <div className="p-3.5 bg-slate-950/70 rounded-xl border border-slate-800 space-y-1.5">
+              <span className="text-[10px] font-bold text-slate-400 uppercase">1. Status Integrasi Domain Aplikasi</span>
+              <p className="font-semibold text-white flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>CORS &amp; Routing Vercel Aktif</span>
+              </p>
+              <p className="text-[11px] text-slate-400">
+                Server Express telah mengizinkan origin <code>https://administrasi-guru-mi.vercel.app</code> untuk seluruh request API AI dan KBM. Berkas <code>vercel.json</code> siap deploy.
+              </p>
+            </div>
+
+            <div className="p-3.5 bg-slate-950/70 rounded-xl border border-slate-800 space-y-1.5">
+              <span className="text-[10px] font-bold text-slate-400 uppercase">2. Otorisasi Login Google (Firebase Auth)</span>
+              <p className="font-semibold text-white flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                <span>Authorized Domains Firebase</span>
+              </p>
+              <p className="text-[11px] text-slate-400">
+                Agar login Google Popup berjalan lancar di Vercel: Buka Firebase Console &gt; Authentication &gt; Settings &gt; Authorized domains &gt; Tambahkan <code>administrasi-guru-mi.vercel.app</code>.
+              </p>
+            </div>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
