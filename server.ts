@@ -113,7 +113,11 @@ async function startServer() {
 
   // Health check API
   app.get("/api/health", (_req, res) => {
-    res.json({ status: "ok", timestamp: new Date().toISOString() });
+    res.json({
+      status: "ok",
+      hasGeminiApiKey: Boolean(process.env.GEMINI_API_KEY),
+      timestamp: new Date().toISOString()
+    });
   });
 
   // API 1: Generate AI Modul Ajar

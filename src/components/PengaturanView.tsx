@@ -92,8 +92,13 @@ export const PengaturanView: React.FC<PengaturanViewProps> = ({ config, onNaviga
       const res = await fetch("/api/health");
       const data = await res.json();
       if (res.ok && data.status === "ok") {
-        setTestStatus("success");
-        setTestMessage("Server proxy AI aktif dan siap memproses permintaan Gemini API!");
+        if (data.hasGeminiApiKey) {
+          setTestStatus("success");
+          setTestMessage("Server proxy AI aktif dan variabel GEMINI_API_KEY terdeteksi valid di backend server!");
+        } else {
+          setTestStatus("error");
+          setTestMessage("Server proxy AI aktif, namun variabel GEMINI_API_KEY belum terpasang di backend environment!");
+        }
       } else {
         setTestStatus("error");
         setTestMessage("Server merespon dengan status tidak biasa. Periksa konfigurasi GEMINI_API_KEY.");
@@ -389,54 +394,71 @@ export const PengaturanView: React.FC<PengaturanViewProps> = ({ config, onNaviga
 
           {/* Tab 2: Cara Manual */}
           {apiKeyMethodTab === "manual" && (
-            <div className="bg-white dark:bg-slate-800/80 rounded-2xl p-4 sm:p-5 border border-amber-200 dark:border-slate-700 space-y-4">
-              <div className="flex items-start gap-3">
-                <div className="w-7 h-7 rounded-full bg-blue-600 text-white font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
-                  M
-                </div>
-                <div>
-                  <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
-                    Pemasangan Manual via File Environment (<code>.env</code>)
-                  </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                    Gunakan cara ini jika Anda menjalankan aplikasi di laptop/PC lokal, server VPS sekolah, atau hosting NodeJS mandiri.
-                  </p>
+            <div className="bg-white dark:bg-slate-800/80 rounded-2xl p-4 sm:p-5 border border-amber-200 dark:border-slate-700 space-y-5">
+              {/* Security Banner */}
+              <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/60 flex items-start gap-3">
+                <ShieldAlert className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                <div className="text-xs text-amber-950 dark:text-amber-200 leading-relaxed">
+                  <strong className="block font-bold mb-0.5">Standar Keamanan Zero-Trust Google AI:</strong>
+                  Sesuai kebijakan keamanan web resmi, API Key Google AI tidak boleh dimasukkan ke dalam kolom input form browser biasa. Jika diletakkan di form peramban, kunci rahasia dapat dibaca oleh siswa atau pengguna lain melalui fitur <em>Inspect Element (F12)</em>. Oleh karena itu, kunci disimpan dengan aman di <strong>Environment Variables (Sisi Server)</strong>.
                 </div>
               </div>
 
-              <ol className="space-y-3 pl-2 sm:pl-4 text-xs text-slate-700 dark:text-slate-300">
-                <li className="flex items-start gap-2.5">
-                  <span className="font-black text-blue-600 dark:text-blue-400 shrink-0">Langkah 1:</span>
-                  <div>
-                    Kunjungi portal resmi <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 font-bold underline inline-flex items-center gap-1">Google AI Studio API Key <ExternalLink className="w-3 h-3"/></a> dan klik <strong>Create API Key</strong>.
+              {/* Sub-section A: Untuk Hosting Vercel */}
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h5 className="font-extrabold text-xs text-slate-900 dark:text-white flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-emerald-500" />
+                    <span>A. Cara Pasang di Vercel (administrasi-guru-mi.vercel.app)</span>
+                  </h5>
+                  <a
+                    href="https://vercel.com/dashboard"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                  >
+                    <span>Vercel Dashboard</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+
+                <ol className="space-y-2 text-xs text-slate-700 dark:text-slate-300 pl-4 list-decimal">
+                  <li>Buka proyek Anda di <strong>Vercel Dashboard</strong>.</li>
+                  <li>Klik tab <strong>Settings</strong> &gt; pilih menu <strong>Environment Variables</strong>.</li>
+                  <li>
+                    Pada kolom <strong>Key</strong>, masukkan: <code className="bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono font-bold text-emerald-600 dark:text-emerald-400">GEMINI_API_KEY</code>
+                  </li>
+                  <li>
+                    Pada kolom <strong>Value</strong>, tempelkan API Key Google Anda (didapat dari <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline font-bold">Google AI Studio</a>).
+                  </li>
+                  <li>Klik <strong>Save</strong> dan lakukan <strong>Redeploy</strong> proyek Anda.</li>
+                </ol>
+              </div>
+
+              {/* Sub-section B: Untuk Lokal / Komputer */}
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+                <h5 className="font-extrabold text-xs text-slate-900 dark:text-white flex items-center gap-2">
+                  <Terminal className="w-4 h-4 text-blue-500" />
+                  <span>B. Cara Pasang di Komputer / Server Lokal (.env)</span>
+                </h5>
+
+                <div className="w-full space-y-1.5">
+                  <p className="text-xs text-slate-600 dark:text-slate-400">
+                    Buka file <code>.env</code> di direktori root folder aplikasi, lalu isi:
+                  </p>
+                  <div className="bg-slate-900 text-emerald-400 p-3 rounded-xl font-mono text-xs flex items-center justify-between">
+                    <span className="truncate mr-2">GEMINI_API_KEY="AIzaSy...kunci-api-anda"</span>
+                    <button
+                      type="button"
+                      onClick={handleCopyEnv}
+                      className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 transition-colors shrink-0 cursor-pointer"
+                    >
+                      {copiedEnv ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                      <span>{copiedEnv ? "Tersalin!" : "Salin"}</span>
+                    </button>
                   </div>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="font-black text-blue-600 dark:text-blue-400 shrink-0">Langkah 2:</span>
-                  <span>Salin string API Key yang berhasil dibuat (berformat teks acak diawali <code>AIzaSy...</code>).</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="font-black text-blue-600 dark:text-blue-400 shrink-0">Langkah 3:</span>
-                  <div className="w-full space-y-1.5">
-                    <span>Buka file <code>.env</code> di direktori root aplikasi Anda (buat baru jika belum ada), lalu tempelkan baris:</span>
-                    <div className="bg-slate-900 text-emerald-400 p-3 rounded-xl font-mono text-xs flex items-center justify-between">
-                      <span className="truncate mr-2">GEMINI_API_KEY="AIzaSy...kunci-api-anda"</span>
-                      <button
-                        type="button"
-                        onClick={handleCopyEnv}
-                        className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 transition-colors shrink-0 cursor-pointer"
-                      >
-                        {copiedEnv ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                        <span>{copiedEnv ? "Tersalin!" : "Salin"}</span>
-                      </button>
-                    </div>
-                  </div>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="font-black text-blue-600 dark:text-blue-400 shrink-0">Langkah 4:</span>
-                  <span>Jalankan ulang dev server atau aplikasi Anda dengan perintah <code>npm run dev</code> atau <code>npm start</code>.</span>
-                </li>
-              </ol>
+                </div>
+              </div>
             </div>
           )}
 
