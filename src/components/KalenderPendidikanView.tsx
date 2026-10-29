@@ -986,34 +986,11 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
             </div>
           </div>
         </div>
-
-        {/* Color Legend (Petunjuk Warna Kegiatan) */}
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
-          <div className="flex items-center space-x-2 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5">
-            <Layers className="w-4 h-4 text-blue-600" />
-            <span>Keterangan Kode Warna Kalender Pendidikan:</span>
-          </div>
-
-          <div className="flex flex-wrap gap-2 text-xs">
-            {Object.entries(KATEGORI_KALDIK).map(([kKey, kVal]) => (
-              <span
-                key={kKey}
-                className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg border text-[11px] font-bold ${kVal.bgClass}`}
-              >
-                <span
-                  className="w-2.5 h-2.5 rounded-full inline-block shrink-0 shadow-2xs"
-                  style={{ backgroundColor: kVal.dotColor }}
-                />
-                <span>{kVal.label}</span>
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* PRINTABLE OFFICIAL SHEET / ON-SCREEN WORKSPACE */}
       <div className="document-sheet bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 shadow-xs border border-slate-200 dark:border-slate-800 print:p-0 print:border-none print:shadow-none print:bg-white text-slate-900 dark:text-slate-100 print:text-black">
-        {/* OFFICIAL KOP SURAT SEKOLAH (Without DINAS PENDIDIKAN DAN KEBUDAYAAN) */}
+        {/* OFFICIAL KOP SURAT SEKOLAH */}
         <div className="flex items-center justify-between gap-4 pb-4 border-b-2 border-double border-slate-900 dark:border-slate-400 print:border-black mb-6">
           <div className="w-16 sm:w-20 h-16 sm:h-20 shrink-0 flex items-center justify-center">
             {config.Logo_Kiri ? (
@@ -1027,13 +1004,13 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
 
           <div className="text-center flex-1 space-y-0.5">
             <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 print:text-black">
-              {config.Pemerintah || "PEMERINTAH PROVINSI / KABUPATEN"}
+              {config.Pemerintah || "KEMENTERIAN AGAMA REPUBLIK INDONESIA"}
             </h4>
             <h1 className="text-base sm:text-xl font-black uppercase text-slate-900 dark:text-white print:text-black my-0.5">
-              {config.Nama_Sekolah || "SMP NEGERI 3 KERINCI"}
+              {config.Nama_Sekolah || "MI SYURIYAH PEBATAN"}
             </h1>
             <p className="text-[11px] text-slate-600 dark:text-slate-400 print:text-black">
-              {config.Alamat_Sekolah || "Jalan Raya Lintas Sungai Penuh, Telp: (0748) 21102"}
+              {config.Alamat_Sekolah || "Jalan Raya Pebatan, Kec. Rawa Pitu, Kab. Brebes"}
             </p>
           </div>
 
@@ -1049,7 +1026,7 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
         </div>
 
         {/* Document Title */}
-        <div className="text-center mb-6 space-y-1">
+        <div className="text-center mb-5 space-y-1">
           <h2 className="text-base sm:text-lg font-black uppercase tracking-wide text-slate-900 dark:text-white print:text-black">
             KALENDER PENDIDIKAN & AGENDA AKADEMIK
           </h2>
@@ -1065,8 +1042,40 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
           </p>
         </div>
 
+        {/* KETERANGAN KODE WARNA & RANGKUMAN HEB (Terintegrasi di Preview & Cetak Presisi) */}
+        <div className="mb-6 p-3 sm:p-4 rounded-xl border border-slate-300 dark:border-slate-700 print:border-slate-400 bg-slate-50 dark:bg-slate-900/60 print:bg-slate-50 space-y-2.5 print:space-y-1.5 print:break-inside-avoid">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-700 print:border-slate-300 pb-2 print:pb-1">
+            <div className="flex items-center space-x-1.5 text-xs print:text-[9.5px] font-black text-slate-800 dark:text-slate-200 print:text-black uppercase tracking-wider">
+              <Layers className="w-4 h-4 text-blue-600 print:w-3.5 print:h-3.5" />
+              <span>Keterangan Kode Warna Agenda & Kegiatan Akademik:</span>
+            </div>
+            <div className="text-xs print:text-[9px] font-bold text-slate-700 dark:text-slate-300 print:text-black">
+              Total Hari Belajar Efektif (HEB):{" "}
+              <span className="text-emerald-700 dark:text-emerald-400 print:text-emerald-800 font-black">
+                {totalStats.totalEffectiveDays} Hari
+              </span>{" "}
+              ({totalStats.totalEffectiveWeeks} Minggu Efektif)
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 print:gap-1.5 text-xs print:text-[8px]">
+            {Object.entries(KATEGORI_KALDIK).map(([kKey, kVal]) => (
+              <div
+                key={kKey}
+                className={`inline-flex items-center space-x-1.5 px-2.5 py-1 print:py-0.5 rounded-lg border font-bold ${kVal.bgClass} print:bg-opacity-100 print:border-opacity-100`}
+              >
+                <span
+                  className="w-2.5 h-2.5 print:w-2 print:h-2 rounded-full inline-block shrink-0 shadow-2xs"
+                  style={{ backgroundColor: kVal.dotColor }}
+                />
+                <span className="truncate">{kVal.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* SECTION 1: VISUAL CALENDAR MATRIX (MONTH CARDS GRID) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8 print:grid-cols-3 print:gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8 print:grid-cols-3 print:gap-3 print:mb-6">
           {academicMonths.map((m) => {
             const daysInMonth = new Date(m.year, m.monthIdx + 1, 0).getDate();
             const firstDayOfWeek = new Date(m.year, m.monthIdx, 1).getDay(); // 0 is Sunday
@@ -1081,39 +1090,39 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
             return (
               <div
                 key={`${m.year}-${m.monthIdx}`}
-                className="bg-white dark:bg-slate-900 rounded-xl border border-slate-300 dark:border-slate-700 print:border-black overflow-hidden shadow-2xs flex flex-col"
+                className="kaldik-month-card bg-white dark:bg-slate-900 rounded-xl border border-slate-300 dark:border-slate-700 print:border-slate-800 overflow-hidden shadow-2xs flex flex-col print:break-inside-avoid print:page-break-inside-avoid"
               >
                 {/* Month Card Header */}
-                <div className="bg-slate-800 text-white dark:bg-slate-950 px-3 py-2 flex items-center justify-between border-b border-slate-700">
+                <div className="bg-slate-800 text-white dark:bg-slate-950 print:bg-slate-800 print:text-white px-3 py-1.5 print:py-1 flex items-center justify-between border-b border-slate-700 print:border-slate-800">
                   <div className="flex items-center space-x-1.5">
-                    <span className="font-black text-xs uppercase tracking-wider">
+                    <span className="font-black text-xs print:text-[10px] uppercase tracking-wider">
                       {m.name} {m.year}
                     </span>
-                    <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-slate-700 text-slate-300 uppercase">
+                    <span className="text-[9px] print:text-[7.5px] px-1.5 py-0.2 rounded-full bg-slate-700 text-slate-300 print:bg-slate-700 print:text-slate-200 uppercase font-bold">
                       {m.semester}
                     </span>
                   </div>
-                  <span className="text-[10px] font-bold text-emerald-400">
+                  <span className="text-[10px] print:text-[9px] font-bold text-emerald-400 print:text-emerald-300">
                     {currentStat?.effectiveDays || 0} HEB
                   </span>
                 </div>
 
                 {/* Days of Week Header */}
-                <div className="grid grid-cols-7 bg-slate-100 dark:bg-slate-800 print:bg-slate-100 text-[10px] font-black text-center py-1 border-b border-slate-200 dark:border-slate-700 print:border-black text-slate-700 dark:text-slate-300 print:text-black">
+                <div className="grid grid-cols-7 bg-slate-100 dark:bg-slate-800 print:bg-slate-100 text-[10px] print:text-[8.5px] font-black text-center py-1 border-b border-slate-200 dark:border-slate-700 print:border-slate-300 text-slate-700 dark:text-slate-300 print:text-black">
                   <span>Sen</span>
                   <span>Sel</span>
                   <span>Rab</span>
                   <span>Kam</span>
                   <span>Jum</span>
                   <span>Sab</span>
-                  <span className="text-red-600 print:text-red-700">Min</span>
+                  <span className="text-red-600 print:text-red-600 font-black">Min</span>
                 </div>
 
                 {/* Calendar Days Matrix */}
-                <div className="grid grid-cols-7 p-1.5 gap-1 text-[11px] font-semibold flex-1">
+                <div className="grid grid-cols-7 p-1.5 print:p-1 gap-1 print:gap-0.5 text-[11px] print:text-[9.5px] font-semibold flex-1">
                   {/* Empty cells before 1st day of month */}
                   {Array.from({ length: startDayShift }).map((_, i) => (
-                    <div key={`empty-${i}`} className="h-7" />
+                    <div key={`empty-${i}`} className="h-7 print:h-6" />
                   ))}
 
                   {/* Month days */}
@@ -1131,14 +1140,14 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
                       <div
                         key={`day-${dayNum}`}
                         onClick={() => handleOpenAddModal(dateStr)}
-                        className={`h-7 rounded-lg flex flex-col items-center justify-center relative cursor-pointer group transition-all text-[11px] ${
+                        className={`h-7 print:h-6 rounded-lg print:rounded-md flex flex-col items-center justify-center relative cursor-pointer group transition-all text-[11px] print:text-[9.5px] ${
                           topEvent
                             ? katConfig
-                              ? `${katConfig.bgClass} font-black shadow-2xs`
+                              ? `${katConfig.bgClass} font-black shadow-2xs print:border print:border-slate-300`
                               : "bg-blue-100 text-blue-900 font-bold"
                             : isSunday
-                            ? "text-red-600 font-bold bg-red-50/50 dark:bg-red-950/20"
-                            : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200"
+                            ? "text-red-600 font-bold bg-red-50/50 dark:bg-red-950/20 print:bg-red-50/80 print:text-red-600"
+                            : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 print:text-black print:bg-white"
                         }`}
                         title={
                           dayEvents.length > 0
@@ -1146,10 +1155,10 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
                             : `Klik untuk tambah agenda pada ${dateStr}`
                         }
                       >
-                        <span>{dayNum}</span>
+                        <span className="leading-none">{dayNum}</span>
                         {dayEvents.length > 0 && (
                           <span
-                            className="w-1.5 h-1.5 rounded-full absolute bottom-0.5"
+                            className="w-1.5 h-1.5 print:w-1.5 print:h-1.5 rounded-full absolute bottom-0.5 print:bottom-0.5"
                             style={{ backgroundColor: katConfig?.dotColor || "#3b82f6" }}
                           />
                         )}
@@ -1163,9 +1172,9 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
         </div>
 
         {/* SECTION 2: TABEL HARI EFEKTIF BELAJAR (HEB) & MINGGU EFEKTIF */}
-        <div className="mb-8 space-y-2">
+        <div className="mb-8 print:mb-6 space-y-2 print:break-inside-avoid">
           <h4 className="font-black text-xs sm:text-sm uppercase tracking-wider text-slate-800 dark:text-slate-200 print:text-black flex items-center gap-2">
-            <Award className="w-4 h-4 text-blue-600" />
+            <Award className="w-4 h-4 text-blue-600 print:w-3.5 print:h-3.5" />
             <span>Rincian Rekapitulasi Hari Belajar Efektif (HEB) & Minggu Efektif</span>
           </h4>
 
@@ -1185,16 +1194,16 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
                   <th className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center">
                     Jml Hari
                   </th>
-                  <th className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center">
+                  <th className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center text-red-600 print:text-red-600">
                     Hari Minggu
                   </th>
-                  <th className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center">
+                  <th className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center text-rose-600 print:text-rose-600">
                     Hari Libur
                   </th>
-                  <th className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300">
+                  <th className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center bg-emerald-50 dark:bg-emerald-950/40 print:bg-emerald-50 text-emerald-800 dark:text-emerald-300 print:text-emerald-800 font-extrabold">
                     Hari Efektif (HEB)
                   </th>
-                  <th className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300">
+                  <th className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center bg-blue-50 dark:bg-blue-950/40 print:bg-blue-50 text-blue-800 dark:text-blue-300 print:text-blue-800 font-extrabold">
                     Minggu Efektif
                   </th>
                 </tr>
@@ -1203,55 +1212,55 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
                 {monthlyStats.map((st, idx) => (
                   <tr
                     key={`stat-${st.monthIdx}-${st.year}`}
-                    className="hover:bg-slate-50 dark:hover:bg-slate-800/50 print:hover:bg-transparent"
+                    className="hover:bg-slate-50 dark:hover:bg-slate-800/50 print:hover:bg-transparent print:break-inside-avoid"
                   >
-                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center font-bold text-slate-500">
+                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center font-bold text-slate-500 print:text-black">
                       {idx + 1}
                     </td>
                     <td className="border border-slate-300 dark:border-slate-700 print:border-black px-3 py-1 font-bold">
                       {st.name} {st.year}
                     </td>
-                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center capitalize">
+                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center capitalize font-semibold">
                       {st.semester}
                     </td>
-                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center">
+                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center font-bold">
                       {st.daysInMonth}
                     </td>
-                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center text-red-600">
+                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center text-red-600 print:text-red-600 font-bold">
                       {st.sundays}
                     </td>
-                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center text-rose-600">
+                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center text-rose-600 print:text-rose-600 font-bold">
                       {st.holidayEvents}
                     </td>
-                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center font-extrabold text-emerald-700 dark:text-emerald-400">
+                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center font-extrabold text-emerald-700 dark:text-emerald-400 print:text-emerald-800 print:bg-emerald-50/70">
                       {st.effectiveDays} Hari
                     </td>
-                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center font-extrabold text-blue-700 dark:text-blue-400">
+                    <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1 text-center font-extrabold text-blue-700 dark:text-blue-400 print:text-blue-800 print:bg-blue-50/70">
                       {st.effectiveWeeks} Minggu
                     </td>
                   </tr>
                 ))}
                 {/* Total Row */}
-                <tr className="bg-slate-100 dark:bg-slate-900 print:bg-slate-100 font-black text-slate-900 dark:text-white print:text-black">
+                <tr className="bg-slate-100 dark:bg-slate-900 print:bg-slate-100 font-black text-slate-900 dark:text-white print:text-black print:break-inside-avoid">
                   <td
                     colSpan={3}
                     className="border border-slate-300 dark:border-slate-700 print:border-black px-3 py-1.5 text-right uppercase tracking-wider"
                   >
                     Total Keseluruhan
                   </td>
-                  <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center">
+                  <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center font-black">
                     {totalStats.totalDays}
                   </td>
-                  <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center text-red-600">
+                  <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center text-red-600 print:text-red-600 font-black">
                     {totalStats.totalSundays}
                   </td>
-                  <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center text-rose-600">
+                  <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center text-rose-600 print:text-rose-600 font-black">
                     {totalStats.totalHolidays}
                   </td>
-                  <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center text-emerald-700 dark:text-emerald-400">
+                  <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center text-emerald-700 dark:text-emerald-400 print:text-emerald-800 print:bg-emerald-50 font-black">
                     {totalStats.totalEffectiveDays} Hari
                   </td>
-                  <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center text-blue-700 dark:text-blue-400">
+                  <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center text-blue-700 dark:text-blue-400 print:text-blue-800 print:bg-blue-50 font-black">
                     {totalStats.totalEffectiveWeeks} Minggu
                   </td>
                 </tr>
@@ -1261,9 +1270,9 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
         </div>
 
         {/* SECTION 3: DAFTAR AGENDA & TANGGAL PENTING */}
-        <div className="mb-8 space-y-2">
+        <div className="mb-8 print:mb-6 space-y-2">
           <h4 className="font-black text-xs sm:text-sm uppercase tracking-wider text-slate-800 dark:text-slate-200 print:text-black flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-blue-600" />
+            <BookOpen className="w-4 h-4 text-blue-600 print:w-3.5 print:h-3.5" />
             <span>Daftar Uraian Agenda & Tanggal Penting KBM ({filteredEvents.length} Kegiatan)</span>
           </h4>
 
@@ -1315,9 +1324,9 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
                     return (
                       <tr
                         key={ev.id}
-                        className="hover:bg-slate-50 dark:hover:bg-slate-800/50 print:hover:bg-transparent"
+                        className="hover:bg-slate-50 dark:hover:bg-slate-800/50 print:hover:bg-transparent print:break-inside-avoid"
                       >
-                        <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center font-bold text-slate-500">
+                        <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center font-bold text-slate-500 print:text-black">
                           {idx + 1}
                         </td>
                         <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center font-mono font-bold">
@@ -1328,7 +1337,7 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
                         </td>
                         <td className="border border-slate-300 dark:border-slate-700 print:border-black px-2 py-1.5 text-center">
                           <span
-                            className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold border ${kat?.bgClass}`}
+                            className={`inline-block px-2 py-0.5 rounded text-[10px] print:text-[8px] font-bold border ${kat?.bgClass} print:bg-opacity-100 print:border-opacity-100`}
                           >
                             {kat?.label || ev.kategori}
                           </span>
@@ -1367,7 +1376,7 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
         </div>
 
         {/* SECTION 4: OFFICIAL SIGNATURES & STAMP */}
-        <div className="mt-10 grid grid-cols-2 gap-8 text-xs print:text-[9px] text-slate-800 dark:text-slate-200 print:text-black">
+        <div className="mt-8 print:mt-6 grid grid-cols-2 gap-8 text-xs print:text-[9px] text-slate-800 dark:text-slate-200 print:text-black print:break-inside-avoid">
           {/* Kepala Sekolah */}
           <div className="text-left space-y-1">
             <p>Mengetahui,</p>
@@ -1405,7 +1414,7 @@ export const KalenderPendidikanView: React.FC<KalenderPendidikanViewProps> = ({
           {/* Guru / Waka Kurikulum */}
           <div className="text-right space-y-1">
             <p>
-              {config.Tempat_Tanda_Tangan || "Kerinci"},{" "}
+              {config.Tempat_Tanda_Tangan || "Pebatan"},{" "}
               {new Date().toLocaleDateString("id-ID", {
                 day: "2-digit",
                 month: "long",

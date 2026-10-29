@@ -85,9 +85,9 @@
     page-break-after: auto;
   }
 
-  th,
-  td {
-    color: #000000 !important;
+  .kaldik-month-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 
   thead {
@@ -99,6 +99,7 @@
   }
 
   @page {
-    margin: 1cm;
+    size: auto;
+    margin: 8mm 10mm;
   }
 }
