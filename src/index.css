@@ -1,1 +1,104 @@
 @import "tailwindcss";
+
+/* Universal Print Stylesheet: Ensures ONLY documents are printed, hiding all application UI */
+@media print {
+  /* 1. HIDE ENTIRE APPLICATION CHROME, SIDEBAR, HEADER, NAVIGATION, MODALS & BUTTONS */
+  header,
+  aside,
+  nav,
+  .sidebar,
+  .header,
+  .print\:hidden,
+  .no-print,
+  button,
+  input,
+  select,
+  textarea,
+  .fixed,
+  .sticky,
+  .custom-scrollbar::-webkit-scrollbar,
+  [role="dialog"],
+  [aria-label="Navigasi Bawah Mobile"],
+  [aria-label="Toggle Sidebar"],
+  .swal2-container {
+    display: none !important;
+  }
+
+  /* 2. RESET VIEWPORT, ROOT, AND MAIN CONTAINERS */
+  html,
+  body,
+  #root,
+  .min-h-screen,
+  .h-screen,
+  .flex-1,
+  main {
+    display: block !important;
+    position: static !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* 3. ENSURE PRINTABLE DOCUMENT SHEETS EXPAND BEAUTIFULLY */
+  .printable-area,
+  .document-sheet,
+  [data-printable="true"],
+  #print-sheet-jadwal-mengajar,
+  #print-sheet-rekap-absen,
+  #print-sheet-absen-bulanan {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* 4. PRESERVE COLORS AND SHARP BORDERS */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: auto;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  th,
+  td {
+    color: #000000 !important;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tfoot {
+    display: table-footer-group;
+  }
+
+  @page {
+    margin: 1cm;
+  }
+}

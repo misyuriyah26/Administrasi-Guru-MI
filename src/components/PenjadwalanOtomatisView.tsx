@@ -364,8 +364,10 @@ export const PenjadwalanOtomatisView: React.FC<PenjadwalanOtomatisViewProps> = (
 
   return (
     <div className="space-y-6">
-      {/* Header Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-900 rounded-2xl p-6 text-white shadow-xl border border-indigo-800/40 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      {/* Top Banner, Summary Cards, and Subtabs (Non-Printable) */}
+      <div className="print:hidden space-y-6">
+        {/* Header Banner */}
+        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-900 rounded-2xl p-6 text-white shadow-xl border border-indigo-800/40 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="space-y-1 max-w-2xl">
           <div className="flex items-center space-x-2">
             <span className="bg-amber-400 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
@@ -488,12 +490,13 @@ export const PenjadwalanOtomatisView: React.FC<PenjadwalanOtomatisViewProps> = (
           <span className="hidden sm:inline">Cetak Daftar</span>
         </button>
       </div>
+      </div>
 
       {/* TAB 1: DAFTAR PENGINGAT */}
       {activeSubTab === "daftar" && (
         <div className="space-y-4">
           {/* Filter & Search Bar */}
-          <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xs border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+          <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xs border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between print:hidden">
             <div className="relative flex-1">
               <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
               <input
@@ -661,7 +664,7 @@ export const PenjadwalanOtomatisView: React.FC<PenjadwalanOtomatisViewProps> = (
                     </div>
 
                     {/* Action Footer */}
-                    <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-700/60 gap-2">
+                    <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-700/60 gap-2 print:hidden">
                       <button
                         onClick={() => handleToggleStatus(item)}
                         className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${

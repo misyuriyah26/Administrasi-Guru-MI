@@ -149,58 +149,62 @@ export const ModulAjarAIView: React.FC<ModulAjarAIViewProps> = ({ config }) => {
   const handlePrint = () => {
     if (!generatedHtml) return;
 
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) {
-      notifyCetakSuccess("Gagal membuka jendela cetak.");
-      return;
-    }
+    try {
+      const printWindow = window.open("", "_blank");
+      if (!printWindow) {
+        window.print();
+        return;
+      }
 
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Cetak Modul Ajar - ${form.topik}</title>
-          <style>
-            @page { size: A4 portrait; margin: 1.5cm; }
-            body { font-family: 'Times New Roman', Times, serif; font-size: 11pt; line-height: 1.25; color: #000000; margin: 0; padding: 0; }
-            h1 { font-size: 16pt; text-align: center; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; color: #000000; }
-            h2 { font-size: 12pt; font-weight: bold; border-bottom: 1.5px solid #000000; padding-bottom: 4px; margin-top: 18px; margin-bottom: 8px; color: #000000; text-transform: uppercase; }
-            h3 { font-size: 11pt; font-weight: bold; margin-top: 12px; margin-bottom: 6px; color: #000000; }
-            p { margin-bottom: 8px; text-align: justify; color: #000000; }
-            table { width: 100%; border-collapse: collapse; margin-bottom: 14px; page-break-inside: auto; }
-            thead { display: table-header-group !important; }
-            tr { page-break-inside: avoid !important; break-inside: avoid !important; }
-            th { border: 1px solid #000000 !important; padding: 6px 8px; vertical-align: middle; text-align: center; font-size: 10pt; font-weight: bold; background-color: #1e3a8a !important; color: #ffffff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            td { border: 1px solid #000000 !important; padding: 6px 8px; vertical-align: top; text-align: left; font-size: 10pt; color: #000000 !important; background-color: #ffffff !important; }
-            ul, ol { margin-bottom: 8px; padding-left: 18px; }
-            li { margin-bottom: 3px; color: #000000; }
-            @media print {
-              body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-              table { page-break-inside: auto; }
-              tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Cetak Modul Ajar - ${form.topik}</title>
+            <style>
+              @page { size: A4 portrait; margin: 1.5cm; }
+              body { font-family: 'Times New Roman', Times, serif; font-size: 11pt; line-height: 1.25; color: #000000; margin: 0; padding: 0; }
+              h1 { font-size: 16pt; text-align: center; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; color: #000000; }
+              h2 { font-size: 12pt; font-weight: bold; border-bottom: 1.5px solid #000000; padding-bottom: 4px; margin-top: 18px; margin-bottom: 8px; color: #000000; text-transform: uppercase; }
+              h3 { font-size: 11pt; font-weight: bold; margin-top: 12px; margin-bottom: 6px; color: #000000; }
+              p { margin-bottom: 8px; text-align: justify; color: #000000; }
+              table { width: 100%; border-collapse: collapse; margin-bottom: 14px; page-break-inside: auto; }
               thead { display: table-header-group !important; }
-            }
-          </style>
-        </head>
-        <body>
-          ${generatedHtml}
-        </body>
-      </html>
-    `);
+              tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+              th { border: 1px solid #000000 !important; padding: 6px 8px; vertical-align: middle; text-align: center; font-size: 10pt; font-weight: bold; background-color: #1e3a8a !important; color: #ffffff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+              td { border: 1px solid #000000 !important; padding: 6px 8px; vertical-align: top; text-align: left; font-size: 10pt; color: #000000 !important; background-color: #ffffff !important; }
+              ul, ol { margin-bottom: 8px; padding-left: 18px; }
+              li { margin-bottom: 3px; color: #000000; }
+              @media print {
+                body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                table { page-break-inside: auto; }
+                tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+                thead { display: table-header-group !important; }
+              }
+            </style>
+          </head>
+          <body>
+            ${generatedHtml}
+          </body>
+        </html>
+      `);
 
-    printWindow.document.close();
-    printWindow.focus();
-    setTimeout(() => {
-      printWindow.print();
-      printWindow.close();
-      notifyCetakSuccess("Dokumen dikirim ke printer!");
-    }, 500);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+        notifyCetakSuccess("Dokumen dikirim ke printer!");
+      }, 500);
+    } catch (e) {
+      window.print();
+    }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 min-h-[80vh]">
+    <div className="flex flex-col lg:flex-row gap-6 min-h-[80vh] print:block print:min-h-0 print:p-0">
       {/* Left Form Panel */}
-      <div className="w-full lg:w-[420px] bg-white dark:bg-slate-800 rounded-2xl shadow-xs border border-slate-200 dark:border-slate-800 flex flex-col shrink-0 overflow-hidden">
+      <div className="w-full lg:w-[420px] bg-white dark:bg-slate-800 rounded-2xl shadow-xs border border-slate-200 dark:border-slate-800 flex flex-col shrink-0 overflow-hidden print:hidden">
         {/* Header */}
         <div className="p-5 bg-gradient-to-br from-blue-800 via-indigo-800 to-slate-900 text-white space-y-1 relative">
           <div className="flex items-center space-x-2">
@@ -453,9 +457,9 @@ export const ModulAjarAIView: React.FC<ModulAjarAIViewProps> = ({ config }) => {
       </div>
 
       {/* Right Preview Workspace */}
-      <div className="flex-1 bg-white dark:bg-slate-800 rounded-2xl shadow-xs border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden">
+      <div className="flex-1 bg-white dark:bg-slate-800 rounded-2xl shadow-xs border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden print:p-0 print:border-none print:shadow-none print:bg-white">
         {/* Workspace Toolbar */}
-        <div className="p-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+        <div className="p-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0 print:hidden">
           <div className="flex items-center space-x-2">
             <FileText className="w-5 h-5 text-blue-600" />
             <div>
@@ -486,9 +490,9 @@ export const ModulAjarAIView: React.FC<ModulAjarAIViewProps> = ({ config }) => {
         </div>
 
         {/* Content Display */}
-        <div className="flex-1 overflow-y-auto p-6 bg-slate-100 dark:bg-slate-950/80 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-6 bg-slate-100 dark:bg-slate-950/80 custom-scrollbar print:p-0 print:m-0 print:bg-white print:overflow-visible">
           {!generatedHtml && !loading && (
-            <div className="h-[500px] flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl bg-white/50 dark:bg-slate-900/50">
+            <div className="h-[500px] flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl bg-white/50 dark:bg-slate-900/50 print:hidden">
               <BookOpen className="w-16 h-16 text-slate-300 dark:text-slate-600 mb-4" />
               <h4 className="font-bold text-slate-700 dark:text-slate-300 text-base">Kertas Modul Masih Kosong</h4>
               <p className="text-xs text-slate-500 max-w-sm mt-1">
@@ -498,7 +502,7 @@ export const ModulAjarAIView: React.FC<ModulAjarAIViewProps> = ({ config }) => {
           )}
 
           {loading && (
-            <div className="h-[500px] flex flex-col items-center justify-center text-center p-8 space-y-4">
+            <div className="h-[500px] flex flex-col items-center justify-center text-center p-8 space-y-4 print:hidden">
               <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
               <h4 className="font-bold text-slate-800 dark:text-white text-base">Meracik Modul Pembelajaran...</h4>
               <p className="text-xs text-slate-500 max-w-md">
@@ -508,7 +512,7 @@ export const ModulAjarAIView: React.FC<ModulAjarAIViewProps> = ({ config }) => {
           )}
 
           {generatedHtml && !loading && (
-            <div className="max-w-3xl mx-auto bg-white text-slate-900 p-8 sm:p-12 shadow-xl rounded-xl border border-slate-200 text-xs leading-relaxed space-y-4 font-serif">
+            <div className="document-sheet max-w-3xl mx-auto bg-white text-slate-900 p-8 sm:p-12 shadow-xl rounded-xl border border-slate-200 text-xs leading-relaxed space-y-4 font-serif print:max-w-none print:shadow-none print:border-none print:p-0">
               <div
                 dangerouslySetInnerHTML={{ __html: generatedHtml }}
                 className="prose max-w-none prose-headings:font-sans prose-h1:text-xl prose-h1:font-black prose-h1:text-center prose-h1:text-blue-900 prose-h2:text-sm prose-h2:font-bold prose-h2:border-b-2 prose-h2:border-blue-900 prose-h2:pb-1 prose-h2:mt-6 prose-table:w-full prose-table:border-collapse prose-th:border prose-th:border-slate-700 prose-th:p-2.5 prose-th:bg-blue-900 prose-th:text-white prose-th:font-bold prose-th:text-center prose-td:border prose-td:border-slate-300 prose-td:p-2 prose-td:text-slate-800"

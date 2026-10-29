@@ -454,37 +454,41 @@ export default function App() {
   }
 
   return (
-    <div className={`min-h-screen flex bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans transition-colors ${isDarkMode ? "dark" : ""}`}>
+    <div className={`min-h-screen flex bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans transition-colors print:bg-white print:block print:min-h-0 print:p-0 ${isDarkMode ? "dark" : ""}`}>
       {/* Navigation Sidebar */}
-      <Sidebar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        isOpen={sidebarOpen}
-        setIsOpen={setSidebarOpen}
-        config={config}
-        currentUser={currentUser}
-        onOpenAuthModal={() => setIsAuthModalOpen(true)}
-        onLogout={handleLogout}
-      />
-
-      {/* Main Content Workspace */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <Header
+      <div className="print:hidden">
+        <Sidebar
           activeTab={activeTab}
-          onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-          isDarkMode={isDarkMode}
-          onSetDarkMode={(isDark) => setIsDarkMode(isDark)}
-          onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
-          isConnected={isConnected}
+          setActiveTab={setActiveTab}
+          isOpen={sidebarOpen}
+          setIsOpen={setSidebarOpen}
           config={config}
-          pengingatList={pengingatList}
-          onNavigate={(tab) => setActiveTab(tab)}
           currentUser={currentUser}
           onOpenAuthModal={() => setIsAuthModalOpen(true)}
           onLogout={handleLogout}
         />
+      </div>
 
-        <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-8 custom-scrollbar pb-24 lg:pb-8">
+      {/* Main Content Workspace */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden print:block print:overflow-visible print:w-full">
+        <div className="print:hidden">
+          <Header
+            activeTab={activeTab}
+            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+            isDarkMode={isDarkMode}
+            onSetDarkMode={(isDark) => setIsDarkMode(isDark)}
+            onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+            isConnected={isConnected}
+            config={config}
+            pengingatList={pengingatList}
+            onNavigate={(tab) => setActiveTab(tab)}
+            currentUser={currentUser}
+            onOpenAuthModal={() => setIsAuthModalOpen(true)}
+            onLogout={handleLogout}
+          />
+        </div>
+
+        <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-8 custom-scrollbar pb-24 lg:pb-8 print:p-0 print:m-0 print:overflow-visible print:block print:w-full">
           {activeTab === "dashboard" && (
             <DashboardView
               siswaList={siswaList}
@@ -619,7 +623,7 @@ export default function App() {
 
         {/* Native Mobile Bottom Navigation Bar */}
         <nav 
-          className="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 z-30 lg:hidden px-2 py-1.5 pb-safe shadow-lg flex items-center justify-around transition-colors"
+          className="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 z-30 lg:hidden px-2 py-1.5 pb-safe shadow-lg flex items-center justify-around transition-colors print:hidden"
           aria-label="Navigasi Bawah Mobile"
         >
           <button

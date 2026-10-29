@@ -765,7 +765,7 @@ export const AgendaMengajarView: React.FC<AgendaMengajarViewProps> = ({
 
       {/* VIEW TAB 1: KELOLA & INPUT AGENDA */}
       {viewTab === "kelola" && (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xs border border-slate-200 dark:border-slate-800 space-y-5">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xs border border-slate-200 dark:border-slate-800 space-y-5 print:hidden">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-extrabold text-slate-800 dark:text-white flex items-center gap-2">
               <Plus className="w-4 h-4 text-blue-600" />
@@ -971,7 +971,7 @@ export const AgendaMengajarView: React.FC<AgendaMengajarViewProps> = ({
 
       {/* VIEW TAB 2: PRINTABLE OFFICIAL SHEET / PRATINJAU CETAK RESMI (Bulanan & Per Semester) */}
       {viewTab === "cetak" && (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 shadow-xs border border-slate-200 dark:border-slate-800 print:p-0 print:border-none print:shadow-none print:bg-white text-slate-900 dark:text-slate-100 print:text-black">
+        <div className="document-sheet bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 shadow-xs border border-slate-200 dark:border-slate-800 print:p-0 print:border-none print:shadow-none print:bg-white text-slate-900 dark:text-slate-100 print:text-black">
           {/* OFFICIAL KOP SURAT SEKOLAH (Without DINAS PENDIDIKAN DAN KEBUDAYAAN) */}
           <div className="flex items-center justify-between gap-4 pb-4 border-b-2 border-double border-slate-900 dark:border-slate-400 print:border-black mb-6">
             <div className="w-16 sm:w-20 h-16 sm:h-20 shrink-0 flex items-center justify-center">
