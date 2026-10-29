@@ -32,6 +32,7 @@ import { Pengaturan } from "../types";
 import { savePengaturan } from "../lib/firebase";
 import { notifySimpanSuccess, notifySimpanError } from "../lib/swal";
 import { SignatureCanvasModal } from "./SignatureCanvasModal";
+import { apiFetch } from "../lib/api";
 
 // Standard Official Indonesian Education Logos (SVG Data URLs)
 const PRESET_TUT_WURI = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="%230b4f9c" stroke="%23ffcf00" stroke-width="3"/><polygon points="50,15 62,38 88,38 67,54 75,78 50,63 25,78 33,54 12,38 38,38" fill="%23ffcf00"/><circle cx="50" cy="50" r="14" fill="%23ffffff"/><path d="M42,50 Q50,40 58,50 Q50,60 42,50" fill="%230b4f9c"/><path d="M50,38 L50,62" stroke="%23ffcf00" stroke-width="2"/></svg>`;
@@ -89,9 +90,16 @@ export const PengaturanView: React.FC<PengaturanViewProps> = ({ config, onNaviga
     setTestStatus("testing");
     setTestMessage("Sedang menguji konektivitas server proxy AI...");
     try {
-      const res = await fetch("/api/health");
-      const data = await res.json();
-      if (res.ok && data.status === "ok") {
+      const res = await apiFetch("/api/health");
+      const text = await res.text();
+      let data: any = null;
+      try {
+        data = JSON.parse(text);
+      } catch (parseErr) {
+        throw new Error("Server mengembalikan format non-JSON. Pastikan server backend AI aktif.");
+      }
+
+      if (res.ok && data?.status === "ok") {
         if (data.hasGeminiApiKey) {
           setTestStatus("success");
           setTestMessage("Server proxy AI aktif dan variabel GEMINI_API_KEY terdeteksi valid di backend server!");

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Pengaturan } from "../types";
 import { notifySimpanSuccess, notifySimpanError, notifyUnduhSuccess } from "../lib/swal";
+import { apiFetch } from "../lib/api";
 
 interface GeneratorPerangkatAjarAIViewProps {
   config: Pengaturan;
@@ -126,7 +127,7 @@ Peserta didik mampu menulis gagasan, pikiran, pandangan, arahan atau pesan tertu
     setGeneratingProgress(`Menyusun ${docMeta?.fullTitle || targetType}...`);
 
     try {
-      const res = await fetch("/api/ai/generate-perangkat-ajar", {
+      const res = await apiFetch("/api/ai/generate-perangkat-ajar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -135,8 +136,15 @@ Peserta didik mampu menulis gagasan, pikiran, pandangan, arahan atau pesan tertu
         })
       });
 
-      const data = await res.json();
-      if (data.status === "success" && data.html) {
+      const text = await res.text();
+      let data: any = null;
+      try {
+        data = JSON.parse(text);
+      } catch (parseErr) {
+        throw new Error("Server proxy mengembalikan respon non-JSON. Pastikan backend server AI aktif.");
+      }
+
+      if (data?.status === "success" && data?.html) {
         const cleanedHtml = sanitizeHtmlForOutput(data.html);
         setGeneratedDocs((prev) => ({
           ...prev,
@@ -144,7 +152,7 @@ Peserta didik mampu menulis gagasan, pikiran, pandangan, arahan atau pesan tertu
         }));
         notifySimpanSuccess(`${docMeta?.fullTitle || "Dokumen"} berhasil dibuat!`);
       } else {
-        throw new Error(data.message || "Gagal menghasilkan dokumen");
+        throw new Error(data?.message || "Gagal menghasilkan dokumen");
       }
     } catch (err: any) {
       console.error(err);
@@ -164,7 +172,7 @@ Peserta didik mampu menulis gagasan, pikiran, pandangan, arahan atau pesan tertu
       setGeneratingProgress(`[${i + 1}/${types.length}] Menyusun ${docMeta?.fullTitle}...`);
 
       try {
-        const res = await fetch("/api/ai/generate-perangkat-ajar", {
+        const res = await apiFetch("/api/ai/generate-perangkat-ajar", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -173,8 +181,15 @@ Peserta didik mampu menulis gagasan, pikiran, pandangan, arahan atau pesan tertu
           })
         });
 
-        const data = await res.json();
-        if (data.status === "success" && data.html) {
+        const text = await res.text();
+        let data: any = null;
+        try {
+          data = JSON.parse(text);
+        } catch (parseErr) {
+          continue;
+        }
+
+        if (data?.status === "success" && data?.html) {
           const cleanedHtml = sanitizeHtmlForOutput(data.html);
           setGeneratedDocs((prev) => ({
             ...prev,

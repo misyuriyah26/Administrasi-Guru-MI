@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Bot, Send, User, Sparkles, Copy, Check, Loader2 } from "lucide-react";
 import { ChatMessage, Pengaturan } from "../types";
+import { apiFetch } from "../lib/api";
 
 interface AsistenGuruAIViewProps {
   config: Pengaturan;
@@ -51,7 +52,7 @@ export const AsistenGuruAIView: React.FC<AsistenGuruAIViewProps> = ({ config }) 
     setLoading(true);
 
     try {
-      const res = await fetch("/api/ai/chat-asisten", {
+      const res = await apiFetch("/api/ai/chat-asisten", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -63,8 +64,15 @@ export const AsistenGuruAIView: React.FC<AsistenGuruAIViewProps> = ({ config }) 
         })
       });
 
-      const data = await res.json();
-      if (data.status === "success") {
+      const text = await res.text();
+      let data: any = null;
+      try {
+        data = JSON.parse(text);
+      } catch (parseErr) {
+        throw new Error("Server proxy mengembalikan respon non-JSON. Pastikan backend AI aktif.");
+      }
+
+      if (data?.status === "success") {
         const assistantMsg: ChatMessage = {
           id: (Date.now() + 1).toString(),
           sender: "assistant",
